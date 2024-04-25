@@ -10,44 +10,48 @@ enum GrayValue
 };
 
 Car car;
-GraySensor sensor(7, 6);              // clock=7, data=6
+GraySensor sensor(7, 6);                 // clock=7, data=6
 PIDController pidController(5, 0.03, 2); // Kp, Ki, Kd
 
 void setup()
 {
   Serial.begin(115200);
   car.setSpeed(100);
-  car.setTurnSpeed(30);
+  car.setTurnSpeed(80);
 }
 
 void pid_trackLine()
 {
   int *grayValues = sensor.getGrayValues();
-  if (grayValues[0] && grayValues[1] && grayValues[2] && grayValues[3] && grayValues[4] && grayValues[5] && grayValues[6] && grayValues[7])
-  {
-    car.stop();
-    return;
-  }
-  double targetPosition = 4; // 预期位置
-  int currentPosition = 0;   // 当前位置
-  for (int i = 0; i < 8; i++)
+  double targetPosition = 3; // 预期位置
+  int currentPosition = 10;  // 当前位置
+  for (int i = 0, j = 0; i < 8; i++)
   {
     if (grayValues[i] == BLACK)
     {
       currentPosition = i;
+      j++;
       break;
+    }
+    if (j > 6)
+    {
+      car.stop();
+      return;
     }
   }
 
-  double pidOutput = pidController.calculate(targetPosition, currentPosition);
-
-  if (pidOutput > 0)
+  int err = currentPosition - targetPosition;
+  if (currentPosition != 10)
+    Serial.println(err);
+  if (err > 0)
   {
-    car.turnRight();
-  }
-  else if (pidOutput < 0)
-  {
+    // car.turnRight();
     car.turnLeft();
+  }
+  else if (err < 1)
+  {
+    // car.turnLeft();
+    car.turnRight();
   }
   else
   {
@@ -107,9 +111,9 @@ void avoidObstacle()
 
 void loop()
 {
-  car.updateSpeed();
-  // //trackLine();
-  avoidObstacle();
+  // car.updateSpeed();
+  //  //trackLine();
+  //avoidObstacle();
   pid_trackLine();
   // // trackLine();
 

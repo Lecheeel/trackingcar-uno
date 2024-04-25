@@ -8,8 +8,10 @@ public:
     double calculate(double targetPosition, double currentPosition)
     {
         error = targetPosition - currentPosition;
+        Serial.println(error);
         double pidOutput = Kp * error + Ki * error + Kd * (error - lastError);
-        //lastError = error;
+        lastError = error;
+        //lastError=0;
         return pidOutput;
     }
 
