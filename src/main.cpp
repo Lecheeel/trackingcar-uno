@@ -23,7 +23,7 @@ void setup()
 void pid_trackLine()
 {
   int *grayValues = sensor.getGrayValues();
-  double targetPosition = 3; // 预期位置
+  double targetPosition = 4; // 预期位置
   int currentPosition = 10;  // 当前位置
   for (int i = 0, j = 0; i < 8; i++)
   {
@@ -42,20 +42,23 @@ void pid_trackLine()
 
   int err = currentPosition - targetPosition;
   if (currentPosition != 10)
-    Serial.println(err);
-  if (err > 0)
+    Serial.print(err);
+  if (err > 1)
   {
     // car.turnRight();
     car.turnLeft();
+    Serial.println("left");
   }
-  else if (err < 1)
+  else if (err < 0)
   {
     // car.turnLeft();
     car.turnRight();
+    Serial.println("right");
   }
   else
   {
     car.forward();
+    Serial.println("forward");
   }
 }
 
@@ -113,8 +116,8 @@ void loop()
 {
   // car.updateSpeed();
   //  //trackLine();
-  //avoidObstacle();
-  pid_trackLine();
+  avoidObstacle();
+  //pid_trackLine();
   // // trackLine();
 
   // car.forward();
