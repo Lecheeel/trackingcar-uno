@@ -5,13 +5,13 @@
 
 enum GrayValue
 {
-  BLACK = 1, 
+  BLACK = 1,
   WHITE = 0
 };
-//
+
 Car car;
-GraySensor sensor(7, 6);                  // clock=7, data=6
-PIDController pidController(5, 0, 2); // Kp, Ki, Kd
+GraySensor sensor(7, 6);              // clock=7, data=6
+PIDController pidController(5, 0.03, 2); // Kp, Ki, Kd
 
 void setup()
 {
@@ -19,6 +19,7 @@ void setup()
   car.setSpeed(100);
   car.setTurnSpeed(30);
 }
+
 void pid_trackLine()
 {
   int *grayValues = sensor.getGrayValues();
@@ -43,12 +44,10 @@ void pid_trackLine()
   if (pidOutput > 0)
   {
     car.turnRight();
-    //car.turnLeft();
   }
   else if (pidOutput < 0)
   {
     car.turnLeft();
-    //car.turnRight();
   }
   else
   {
@@ -100,6 +99,10 @@ void avoidObstacle()
   {
     car.backward();
   }
+  else
+  {
+    car.forward();
+  }
 }
 
 void loop()
@@ -123,8 +126,8 @@ void loop()
   //  car.stop();
   //  delay(5000);
 
-  //car.turnLeft();
-  //  for(int i=0;i<100;i++){
+  // car.turnLeft();
+  //   for(int i=0;i<100;i++){
 
   //   // Serial.println("speed: "+(String)i);
   //   car.setTurnSpeed(i);
